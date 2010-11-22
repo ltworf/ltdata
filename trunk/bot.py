@@ -39,7 +39,6 @@ def reply (sender,recip,text,sock):
     returns the eventual reply or none'''
     for i in modules_list:
         r=i.sendmsg(sender,recip,text)
-        print "MODULE %s(%s,%s,%s) replied %s" %(str(i),sender,recip,text,r)
 
         if r!=None:
             #Determinig if message was to a room or a private one
