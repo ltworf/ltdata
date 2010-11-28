@@ -69,14 +69,19 @@ def sendmsg (sender,recip,text):
         sys.exit(0)
     elif text.startswith(config['control']+"version"):
         return "E tu %s? Sei ancora una alpha vero?" %sender
-    elif text.startswith(config['control']+"nickname"):
+    elif text.startswith(config['control']+"nickname"):                                 #change nickname
         #Change nickname
         try:
             config['nickname']=text.split(' ')[1]
             config['socket'].send ( 'NICK %s\r\n' % config['nickname'] )
         except:
             return "Non riesco a capire il senso della richiesta"
-    elif text.startswith(config['control']+"help"):
+    elif text.startswith(config['control']+"join"):                                     #Join channel
+        try:
+            join((text.split(' ')[1],))
+        except:
+            return "Canale subspaziale troppo disturbato"
+    elif text.startswith(config['control']+"help"):                                     #help
         items=text.split(" ")
         if len(items)==1:
             mod="Moduli caricati: "

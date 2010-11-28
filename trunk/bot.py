@@ -49,11 +49,11 @@ def reply (sender,recip,text,sock):
                 sendmsg(sock,recip,i)
     return None
 
-def join (sock,channels):
+def join (channels):
     '''Joins a list of channels'''
     for i in channels:
         print "Joining channel: %s" % i
-        sock.send ( 'JOIN %s\r\n' % i )
+        config['socket'].send ( 'JOIN %s\r\n' % i )
 
 def sanitize(a,splits=1):
     b=a.split("%s",splits)
@@ -82,14 +82,18 @@ def loadmodules():
         mod=eval(i)
         mod.config=config
         mod.sanitize=sanitize
+        mod.join=join
         mod.init()
         modules_list.append(mod) #Adding module to the list
     
-
-def main():
+def setnickname(sock,nickname):
     
-    loadconf()
-    loadmodules()
+    sock.send ( 'NICK %s\r\n' % nickname )
+    data = sock.recv ( 4096 )
+    print "=====",data,"===="
+    sock.send ( 'USER %s PyIRC PyIRC :LtData che usa un dispositivo LCARS\r\n' % nickname )
+    
+def main():
     
     sock = socket.socket ( socket.AF_INET, socket.SOCK_STREAM )
     sock.connect ( ( config['network'], config['port'] ) )
@@ -97,16 +101,23 @@ def main():
     
     #print sock.recv ( 4096 )
     print "Connected..."
-    sock.send ( 'NICK %s\r\n' % config['nickname'] )
-    sock.send ( 'USER %s PyIRC PyIRC :LtData che usa un dispositivo LCARS\r\n' % config['nickname'] )
-    join(sock,config['channels'])
+    
+    data = sock.recv ( 40096 )
+    print data
+    
+    setnickname(sock,config['nickname'])
+
+    join(config['channels'])
 
     for i in config['channels']:
         sendmsg(sock,i,"%s online" % config['nickname'])
 
     while True:
         data = sock.recv ( 4096 )
-        print "Data read %d %s" % (len(data),data)
+        
+        if len(data)==0:
+            return
+        
         if data.find ( 'PING' ) != -1:
             print "Sending: ",('PONG ' + data.split() [ 1 ])
             sock.send ( 'PONG ' + data.split() [ 1 ] + '\r\n' )
@@ -121,4 +132,8 @@ def main():
             reply(nick,destination,message,sock)
 
 if __name__=='__main__':
-    main()
+    loadconf()
+    loadmodules()
+    
+    while(True):
+        main()
