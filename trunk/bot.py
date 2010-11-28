@@ -62,51 +62,63 @@ def sanitize(a,splits=1):
         a+=i.replace("%","%%")+"%s"
     return a[:-2]
 
+def loadconf():
+    '''Loads configuration into the global dictionary: config'''
+    config['modules'] = modules_list
 
-config['modules'] = modules_list
+    try:
+        execfile(sys.argv[1])
+    except:
+        config['network'] = 'calvino.freenode.net' #'irc.as.azzurra.org'#'irc.freenode.net'
+        config['port'] = 6667
+        config['nickname'] = "LtData"
+        config['channels'] = ('#debian-it','#debian-scn') #"#dmi"
+        config['owner'] = "LtWorf"
+        config['control']="."
 
-try:
-    execfile(sys.argv[1])
-except:
-    config['network'] = 'calvino.freenode.net' #'irc.as.azzurra.org'#'irc.freenode.net'
-    config['port'] = 6667
-    config['nickname'] = "LtData"
-    config['channels'] = ('#debian-it','#debian-scn') #"#dmi"
-    config['owner'] = "LtWorf"
-    config['control']="."
+def loadmodules():
+    for i in modules.__all__:
+        print "Adding module: ", i
+        mod=eval(i)
+        mod.config=config
+        mod.sanitize=sanitize
+        mod.init()
+        modules_list.append(mod) #Adding module to the list
+    
 
-sock = socket.socket ( socket.AF_INET, socket.SOCK_STREAM )
+def main():
+    
+    loadconf()
+    loadmodules()
+    
+    sock = socket.socket ( socket.AF_INET, socket.SOCK_STREAM )
+    sock.connect ( ( config['network'], config['port'] ) )
+    config['socket']=sock
+    
+    #print sock.recv ( 4096 )
+    print "Connected..."
+    sock.send ( 'NICK %s\r\n' % config['nickname'] )
+    sock.send ( 'USER %s PyIRC PyIRC :LtData che usa un dispositivo LCARS\r\n' % config['nickname'] )
+    join(sock,config['channels'])
 
-for i in modules.__all__:
-    print "Adding module: ", i
-    mod=eval(i)
-    mod.config=config
-    mod.sanitize=sanitize
-    mod.init()
-    modules_list.append(mod) #Adding module to the list
+    for i in config['channels']:
+        sendmsg(sock,i,"%s online" % config['nickname'])
 
+    while True:
+        data = sock.recv ( 4096 )
+        print "Data read %d %s" % (len(data),data)
+        if data.find ( 'PING' ) != -1:
+            print "Sending: ",('PONG ' + data.split() [ 1 ])
+            sock.send ( 'PONG ' + data.split() [ 1 ] + '\r\n' )
+        elif data.find ( 'PRIVMSG' ) != -1:
+            nick = data.split ( '!' ) [ 0 ].replace ( ':', '' )
+            message = ':'.join ( data.split ( ':' ) [ 2: ] )
+            try:
+                destination = ''.join ( data.split ( ':' ) [ :2 ] ).split ( ' ' ) [ -2 ]
+            except:
+                destination = ""
+            print '(', destination, ')', nick + ':', message
+            reply(nick,destination,message,sock)
 
-sock.connect ( ( config['network'], config['port'] ) )
-#print sock.recv ( 4096 )
-print "Connected..."
-sock.send ( 'NICK %s\r\n' % config['nickname'] )
-sock.send ( 'USER %s PyIRC PyIRC :LtData che usa un dispositivo LCARS\r\n' % config['nickname'] )
-join(sock,config['channels'])
-
-for i in config['channels']:
-    sendmsg(sock,i,"%s online" % config['nickname'])
-
-while True:
-    data = sock.recv ( 4096 )
-    if data.find ( 'PING' ) != -1:
-        print "Sending: ",('PONG ' + data.split() [ 1 ])
-        sock.send ( 'PONG ' + data.split() [ 1 ] + '\r\n' )
-    elif data.find ( 'PRIVMSG' ) != -1:
-        nick = data.split ( '!' ) [ 0 ].replace ( ':', '' )
-        message = ':'.join ( data.split ( ':' ) [ 2: ] )
-        try:
-            destination = ''.join ( data.split ( ':' ) [ :2 ] ).split ( ' ' ) [ -2 ]
-        except:
-            destination = ""
-        print '(', destination, ')', nick + ':', message
-        reply(nick,destination,message,sock)
+if __name__=='__main__':
+    main()

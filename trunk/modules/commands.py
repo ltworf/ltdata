@@ -69,6 +69,13 @@ def sendmsg (sender,recip,text):
         sys.exit(0)
     elif text.startswith(config['control']+"version"):
         return "E tu %s? Sei ancora una alpha vero?" %sender
+    elif text.startswith(config['control']+"nickname"):
+        #Change nickname
+        try:
+            config['nickname']=text.split(' ')[1]
+            config['socket'].send ( 'NICK %s\r\n' % config['nickname'] )
+        except:
+            return "Non riesco a capire il senso della richiesta"
     elif text.startswith(config['control']+"help"):
         items=text.split(" ")
         if len(items)==1:
