@@ -87,7 +87,6 @@ def loadmodules():
         modules_list.append(mod) #Adding module to the list
     
 def setnickname(sock,nickname):
-    
     sock.send ( 'NICK %s\r\n' % nickname )
     data = sock.recv ( 4096 )
     print "=====",data,"===="
@@ -115,7 +114,7 @@ def main():
     while True:
         data = sock.recv ( 4096 )
         
-        if len(data)==0:
+        if len(data)==0: #Disconnected, exit
             return
         
         if data.find ( 'PING' ) != -1:

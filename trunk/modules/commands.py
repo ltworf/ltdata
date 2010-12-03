@@ -57,7 +57,7 @@ def sendmsg (sender,recip,text):
                 disabled.append(i)
                 return None
 
-    if text.startswith(config['control']+"quit"):
+    if text.startswith(config['control']+"quit"):                                       #quit
         r=check(sender)
         if r!=None:
             return r
