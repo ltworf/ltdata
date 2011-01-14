@@ -76,6 +76,17 @@ def loadconf():
         config['owner'] = "LtWorf"
         config['control']="."
 
+def timeout_recv(sock,size):
+    sock.settimeout(3.0)
+    try:
+        data = sock.recv (size)
+        sock.settimeout(None)
+        return data
+    except:
+        sock.settimeout(None)
+        return None
+    
+
 def loadmodules():
     for i in modules.__all__:
         print "Adding module: ", i
@@ -88,9 +99,8 @@ def loadmodules():
     
 def setnickname(sock,nickname):
     sock.send ( 'NICK %s\r\n' % nickname )
-    data = sock.recv ( 4096 )
-    print "=====",data,"===="
     sock.send ( 'USER %s PyIRC PyIRC :LtData che usa un dispositivo LCARS\r\n' % nickname )
+    data=timeout_recv(sock,4096)
     
 def main():
     
@@ -101,8 +111,8 @@ def main():
     #print sock.recv ( 4096 )
     print "Connected..."
     
-    data = sock.recv ( 40096 )
-    print data
+    data=timeout_recv(sock,40096)
+    #print data
     
     setnickname(sock,config['nickname'])
 
