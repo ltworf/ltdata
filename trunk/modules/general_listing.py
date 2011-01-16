@@ -26,7 +26,7 @@ config={}
 modconfig={}
 
 def init():
-    modconfig['file']="praise"
+    modconfig['file']="general"
     modconfig['good']=True #Defines if it is used for good or bad, if for bad the bot will not do it to itself
     
     load()
@@ -86,5 +86,5 @@ def sendmsg (source,dest,text):
         return "Grazie del tuo gentile contributo con il %s %d..." %(modconfig['file'],len(larts)-1)
     return None
 def help():
-    return "%s%s nickname per complimentarsi \\ %sadd%s per aggiungere un complimento. Usare %% per il nickname." % (config['control'],modconfig['file'],config['control'],modconfig['file'])
+    return "%s%s nickname per complimentarsi \\ %sadd%s per aggiungere una nuova frase. Usare %%s per il nickname." % (config['control'],modconfig['file'],config['control'],modconfig['file'])
     pass
