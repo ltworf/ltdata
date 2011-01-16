@@ -74,5 +74,5 @@ def sendmsg (source,dest,text):
         return "Grazie del tuo contributo, i posteri ti ricorderanno grazie al lart %d"%(len(larts)-1)
     return None
 def help():
-    return ".lart nickname per lartare qualcuno \\ .addlart per aggiungere un lart. Usare due %s. Il primo per il 'non ' ed il secondo per il nickname"
+    return "%slart nickname per lartare qualcuno \\ %saddlart per aggiungere un lart. Usare due %%s. Il primo per il 'non ' ed il secondo per il nickname. Non usare lo spazio dopo il primo %%s" % (config['control'],config['control'])
     pass
