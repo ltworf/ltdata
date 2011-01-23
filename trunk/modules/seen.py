@@ -23,43 +23,45 @@ import pickle
 import time
 
 config={}
-seen={}
-modconfig={}
 
 
 def init():
-    modconfig['counter']=0
-    load()
+    sendmsg.counter=0
+    sendmsg.seendata=None
     pass
 
 def load():
     try:
-        seen=pickle.load(open("%s/seen"%config['files'],'rb'))
+        return pickle.load(open("%s/seen"%config['files'],'rb'))
     except:
-        seen={}
+        return {}
+        
 
-def save():
-    pickle.dump(seen,open("%s/seen"%config['files'],'wb'))
+def save(seendata):
+    pickle.dump(seendata,open("%s/seen"%config['files'],'wb'))
 
 def sendmsg (sender,recip,text):
+    if sendmsg.seendata==None:
+        sendmsg.seendata=load()
+    
     text=text.rstrip()
 
     #store the last message of the user
-    seen[sender]=time.ctime()
+    sendmsg.seendata[sender]=time.ctime()
 
     #saves the status each 500 messages, to don't keep the disk too busy
-    modconfig['counter']+=1
-    if modconfig['counter']>=5: #500:
-        save()
-        modconfig['counter']=0
+    sendmsg.counter+=1
+    if sendmsg.counter>=10: #500:
+        save(sendmsg.seendata)
+        sendmsg.counter=0
 
     #respond to the request
     if text.startswith(config['control']+"seen "):
         nick=text.split(" ",1)[1]
         try:
-            return "%s ha scritto %s" % (nick,seen[nick])
+            return "%s ha scritto %s" % (nick,sendmsg.seendata[nick])
         except:
-            return "Non ho visto %s" % nick
+            return "Non ho visto \"%s\"" % nick
     #    return result
     return None
 def help():
