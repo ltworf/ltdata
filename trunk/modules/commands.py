@@ -34,10 +34,12 @@ def check(sender):
 
 def sendmsg (sender,recip,text):
     text=text.rstrip()
+    is_admin=check(sender)
+    
     if text.startswith(config['control']+"enable "):
-        r=check(sender)
-        if r!=None:
-            return r
+        
+        if is_admin!=None:
+            return is_admin
         
         items=text.split(" ")
         for i in disabled:
@@ -46,9 +48,8 @@ def sendmsg (sender,recip,text):
                 disabled.remove(i)
                 return None
     if text.startswith(config['control']+"disable "):
-        r=check(sender)
-        if r!=None:
-            return r
+        if is_admin!=None:
+            return is_admin
         #pass
         items=text.split(" ")
         for i in config['modules']:
@@ -58,18 +59,18 @@ def sendmsg (sender,recip,text):
                 return None
 
     if text.startswith(config['control']+"quit"):                                       #quit
-        r=check(sender)
-        if r!=None:
-            return r
+        if is_admin!=None:
+            return is_admin
         sys.exit(1)
     elif (text.startswith(config['control']+"restart") or text.startswith(config['control']+"reboot") ):
-        r=check(sender)
-        if r!=None:
-            return r
+        if is_admin!=None:
+            return is_admin
         sys.exit(0)
     elif text.startswith(config['control']+"version"):
         return "E tu %s? Sei ancora una alpha vero?" %sender
     elif text.startswith(config['control']+"nickname"):                                 #change nickname
+        if is_admin!=None:
+            return is_admin
         #Change nickname
         try:
             config['nickname']=text.split(' ')[1]
@@ -77,6 +78,8 @@ def sendmsg (sender,recip,text):
         except:
             return "Non riesco a capire il senso della richiesta"
     elif text.startswith(config['control']+"join"):                                     #Join channel
+        if is_admin!=None:
+            return is_admin
         try:
             join((text.split(' ')[1],))
         except:

@@ -24,20 +24,22 @@ import time
 
 config={}
 seen={}
-counter=0
+modconfig={}
+
 
 def init():
-    #load()
+    modconfig['counter']=0
+    load()
     pass
 
 def load():
     try:
-        seen=pickle.load(open("%s/karma"%config['files'],'rb'))
+        seen=pickle.load(open("%s/seen"%config['files'],'rb'))
     except:
         seen={}
 
 def save():
-    pickle.dump(seen,open("%s/karma"%config['files'],'wb'))
+    pickle.dump(seen,open("%s/seen"%config['files'],'wb'))
 
 def sendmsg (sender,recip,text):
     text=text.rstrip()
@@ -46,9 +48,10 @@ def sendmsg (sender,recip,text):
     seen[sender]=time.ctime()
 
     #saves the status each 500 messages, to don't keep the disk too busy
-    #counter+=1
-    #if counter>=5: #500:
-    #    save()
+    modconfig['counter']+=1
+    if modconfig['counter']>=5: #500:
+        save()
+        modconfig['counter']=0
 
     #respond to the request
     if text.startswith(config['control']+"seen "):
