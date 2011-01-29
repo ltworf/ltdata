@@ -61,7 +61,7 @@ def sendmsg (source,dest,text):
     if text.startswith(config['control']+modconfig['file']+" "):
         return perform_action(source,dest,text)
     elif text.startswith(config['control']+"add"+modconfig['file'] + " "):
-        return add_to_database(soruce,dest,text)
+        return add_to_database(source,dest,text)
     return None
 
 def perform_action(source,dest,text):
