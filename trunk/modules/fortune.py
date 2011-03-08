@@ -19,12 +19,19 @@
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
 import os
+import authorization
+
 larts=[]
 config={}
 def init():
     pass
 
 def sendmsg (source,dest,text):
+    
+    if not authorization.check_permissions(sendmsg,source,dest,text):
+        return None
+    
+    
     if text.startswith(config['control']+"fortune"):
         f=os.popen("fortune -s")
         return f.read(3000).rstrip().replace("\n","\\ ")
