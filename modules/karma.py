@@ -52,7 +52,13 @@ def save():
 
 def sendmsg (sender,recip,text):
     text=text.strip()
-    if text.startswith(config['control']+"karma "):
+    if text==(config['control']+"karma"):
+        rank_pos=sorted([(k, n) for n,k in karma.items() if k > 0])[:3]
+        rank_neg=sorted([(k, n) for n,k in karma.items() if k < 0],reverse=True)[:3]
+        return ("Gli idoli sono %s e gli disgraziati sono %s" %
+                (" ".join(["%s(%d)" % (n,k) for (k,n) in rank_pos]),
+                 " ".join(["%s(%d)" % (n,k) for (k,n) in rank_neg])))
+    elif text.startswith(config['control']+"karma "):
         nick=text.split(" ",1)[1].strip()
         try:
             return "%s: %d" % (nick,karma[nick])
@@ -67,7 +73,7 @@ def sendmsg (sender,recip,text):
             result="Un po' autoreferenziale, non credi?"
         else:
             karma[nick]=readval(nick)+1
-            result="Prendo nota"
+            result="Prendo nota. %s: %d" % (nick, karma[nick])
         save()
         return result
     elif (text.endswith('--') and len(text.split(' '))==1 ):
@@ -76,10 +82,10 @@ def sendmsg (sender,recip,text):
             result= "Nah, non credo di volerlo fare"
         else:
             karma[nick]=readval(nick)-1
-            result ="Prendo nota"
+            result ="Prendo nota. %s: %d" % (nick, karma[nick])
         save()
         return result
     return None
 def help():
-    return ".karma nickname per vedere il karma della persona, nickname++ o nickname-- per aumentarlo o diminuirlo"
+    return ".karma per vedere la classifica, .karma nickname per vedere il karma della persona, nickname++ o nickname-- per aumentarlo o diminuirlo"
     pass
