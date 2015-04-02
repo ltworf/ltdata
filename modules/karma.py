@@ -53,11 +53,11 @@ def save():
 def sendmsg (sender,recip,text):
     text=text.strip()
     if text==(config['control']+"karma"):
-        rank_pos=sorted([(k, n) for n,k in karma.items() if k > 0])[:3]
-        rank_neg=sorted([(k, n) for n,k in karma.items() if k < 0],reverse=True)[:3]
+        rank_pos=sorted([(k, n) for n,k in karma.items() if k > 0],reverse=True)[:3]
+        rank_neg=sorted([(k, n) for n,k in karma.items() if k < 0])[:3]
         return ("Gli idoli sono %s e gli disgraziati sono %s" %
-                (" ".join(["%s(%d)" % (n,k) for (k,n) in rank_pos]),
-                 " ".join(["%s(%d)" % (n,k) for (k,n) in rank_neg])))
+                (", ".join(["%s(%d)" % (n,k) for (k,n) in rank_pos]),
+                 ", ".join(["%s(%d)" % (n,k) for (k,n) in rank_neg])))
     elif text.startswith(config['control']+"karma "):
         nick=text.split(" ",1)[1].strip()
         try:
