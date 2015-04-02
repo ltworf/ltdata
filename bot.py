@@ -32,7 +32,8 @@ config={}
 
 def sendmsg (sock,dest,text):
     '''Sends a message to a room or a person'''
-    sock.send( 'PRIVMSG %s :%s\r\n'%(dest,text) )
+    if sock.send( 'PRIVMSG %s :%s\r\n'%(dest,text) ) == 0:
+        raise Exception("connection")
 
 def reply (sender,recip,text,sock):
     '''Called when there is an incoming message,
