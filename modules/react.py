@@ -31,21 +31,16 @@ def init():
 #[16:42] <salvin> hihihih
 
 
-def append(react):
-    f = file("%s/reacts" % config['files'], "a")
-    f.write(react)
-    f.write("\n")
+def save():
+    # replace database on disk
+    f = file("%s/reacts" % config['files'], 'w')
+    json.dump(messages, f)
     f.close()
 
 
 def load():
     f = file("%s/reacts" % config['files'])
-    while True:
-        l = f.readline().strip()
-        if len(l) == 0:
-            return
-        parts = l.split('#', 1)
-        messages[parts[0]] = parts[1]
+    json.load(f)
     f.close()
 
 
@@ -55,9 +50,12 @@ def sendmsg(source, recip, text):
         parts = react.split('#', 1)
         if (len(parts) != 2):
             return "Grazie del tuo contributo %s, nessuno si ricorderà di te" % source
-        messages[parts[0].lower()] = parts[1]
-        react = "%s#%s" % (parts[0].lower(), parts[1])
-        append(react)
+        elif (not parts[1]):
+            del messages[parts[0]]
+            save()
+        else:
+            messages[parts[0].lower()] = parts[1]
+            save()
         return "Vuoi pure che ti dica grazie? Gli altri ti odieranno per quello che hai fatto."
 
     text = text.lower()
