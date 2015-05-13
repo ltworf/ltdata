@@ -61,10 +61,11 @@ def sendmsg(source, recip, text):
         return "Vuoi pure che ti dica grazie? Gli altri ti odieranno per quello che hai fatto."
 
     text = text.lower()
-    for i in messages:
-        if text.rfind(i) != -1:
-            return messages[i]
-    return None
+    values = []
+    for k in messages:
+        if k in text:
+            values.append(messages[k])
+    return '\n'.join(values)
 
 
 def help():
