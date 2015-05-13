@@ -61,7 +61,7 @@ def sendmsg(source, recip, text):
         return "Vuoi pure che ti dica grazie? Gli altri ti odieranno per quello che hai fatto."
 
     text = text.lower()
-    values = ()
+    values = []
     for k in messages:
         if text.rfind(k) != -1:
             values.append(messages[k])
