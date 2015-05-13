@@ -63,7 +63,7 @@ def sendmsg(source, recip, text):
     text = text.lower()
     values = []
     for k in messages:
-        if text.rfind(k) != -1:
+        if k in text:
             values.append(messages[k])
     return '\n'.join(values)
 
