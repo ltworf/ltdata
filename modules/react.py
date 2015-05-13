@@ -17,6 +17,7 @@
 #
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
+import json
 import sys
 import os
 config = {}
@@ -39,8 +40,9 @@ def save():
 
 
 def load():
+    global messages
     f = file("%s/reacts" % config['files'])
-    json.load(f)
+    messages = json.load(f)
     f.close()
 
 
