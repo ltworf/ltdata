@@ -40,6 +40,8 @@ def reply (sender,recip,text,sock):
     returns the eventual reply or none'''
     for i in modules_list:
         r=i.sendmsg(sender,recip,text)
+        if isinstance(r,unicode):
+            r = r.encode('utf-8')
 
         if r!=None:
             #Determinig if message was to a room or a private one
