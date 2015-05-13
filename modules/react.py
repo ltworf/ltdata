@@ -52,7 +52,7 @@ def sendmsg(source, recip, text):
         parts = react.split('#', 1)
         if (len(parts) != 2):
             return "Grazie del tuo contributo %s, nessuno si ricorderà di te" % source
-        elif (not parts[1]):
+        elif (not parts[1]) and parts[0] in messages:
             del messages[parts[0]]
             save()
         else:
