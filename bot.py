@@ -39,7 +39,7 @@ def reply (sender,recip,text,sock):
     '''Called when there is an incoming message,
     returns the eventual reply or none'''
     for i in modules_list:
-        r=i.sendmsg(sender,recip,text)
+        r=i.sendmsg(sender,recip,text.decode('utf-8'))
         if isinstance(r,unicode):
             r = r.encode('utf-8')
 
