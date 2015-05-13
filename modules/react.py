@@ -50,9 +50,12 @@ def sendmsg(source, recip, text):
         parts = react.split('#', 1)
         if (len(parts) != 2):
             return "Grazie del tuo contributo %s, nessuno si ricorderà di te" % source
-        messages[parts[0].lower()] = parts[1]
-        react = "%s#%s" % (parts[0].lower(), parts[1])
-        save()
+        elif (not parts[1]):
+            del messages[parts[0]]
+            save()
+        else:
+            messages[parts[0].lower()] = parts[1]
+            save()
         return "Vuoi pure che ti dica grazie? Gli altri ti odieranno per quello che hai fatto."
 
     text = text.lower()
