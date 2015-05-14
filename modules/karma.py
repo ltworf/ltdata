@@ -70,28 +70,24 @@ def sendmsg(sender, recip, text):
         except:
             return "Ma di che parli?"
     elif (text.endswith('++') and len(text.split(' ')) == 1):
-        nick = text[:-2]
-        if nick == config['nickname']:
-            karma[nick] = readval(nick) + 1
-            result = "Grazie per la tua stima"
-        elif nick == sender:
-            result = "Un po' autoreferenziale, non credi?"
-        else:
-            karma[nick] = readval(nick) + 1
-            result = "Prendo nota. %s: %d" % (nick, karma[nick])
-        save()
-        return result
+        return vote(text[:-2])
     elif (text.endswith('--') and len(text.split(' ')) == 1):
-        nick = text[:-2]
-        if nick == config['nickname']:
-            result = "Nah, non credo di volerlo fare"
-        else:
-            karma[nick] = readval(nick) - 1
-            result = "Prendo nota. %s: %d" % (nick, karma[nick])
-        save()
-        return result
+        return vote(text[:-2], -1)
     return None
 
+def vote(nick, delta=1):
+    if nick == config['nickname'] and delta > 0:
+        karma[nick] = readval(nick) + delta
+        result = "Grazie per la tua stima"
+    elif nick == config['nickname'] and delta <= 0:
+        result = "Nah, non credo di volerlo fare"
+    elif nick == sender and delta > 0:
+        result = "Un po' autoreferenziale, non credi?"
+    else:
+        karma[nick] = readval(nick) + delta
+        result = "Prendo nota. %s: %d" % (nick, karma[nick])
+    save()
+    return result
 
 def help():
     return ".karma per vedere la classifica, .karma nickname per vedere il karma della persona, nickname++ o nickname-- per aumentarlo o diminuirlo"
