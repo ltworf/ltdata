@@ -19,6 +19,7 @@
 
 import sys
 import os
+import json
 config = {}
 karma = {}
 
@@ -28,28 +29,22 @@ def init():
 
 
 def load():
+    global karma
     f = file("%s/karma" % config['files'])
-    while True:
-        l = f.readline().strip()
-        if len(l) == 0:
-            return
-        parts = l.split('#', 1)
-        karma[parts[0]] = int(parts[1])
+    karma = json.load(f)
     f.close()
 
 
 def readval(nickname):
     try:
-        return karma[nickname]
+        return karma[nickname.lower()]
     except:
-        return 0
+        return (nickname, 0)
 
 
 def save():
     f = file("%s/karma" % config['files'], "w")
-    for i in karma:
-        f.write("%s#%d" % (i, karma[i]))
-        f.write("\n")
+    json.dump(f)
     f.close()
     pass
 
@@ -72,27 +67,29 @@ def sendmsg(sender, recip, text):
             return "Ma di che parli?"
     elif (text.endswith('++') and len(text.split(' ')) == 1):
         nick = text[:-2]
-        if karma == config['nickname']:
-            karma[nick] = readval(nick) + 1
-            result = "Grazie per la tua stima"
-        elif nick == sender:
-            result = "Un po' autoreferenziale, non credi?"
+        if nick.lower() == sender.lower():
+            return "Un po' autoreferenziale, non credi?"
         else:
-            karma[nick] = readval(nick) + 1
-            result = "Prendo nota. %s: %d" % (nick, karma[nick])
-        save()
-        return result
+            return vote(nick)
     elif (text.endswith('--') and len(text.split(' ')) == 1):
         nick = text[:-2]
-        if nick == config['nickname']:
-            result = "Nah, non credo di volerlo fare"
+        if nick.lower() == config['nickname'].lower() and delta <= 0:
+            return "Nah, non credo di volerlo fare"
         else:
-            karma[nick] = readval(nick) - 1
-            result = "Prendo nota. %s: %d" % (nick, karma[nick])
-        save()
-        return result
+            return vote(nick, -1)
     return None
 
+def vote(nick, delta=1):
+    if nick.lower() == config['nickname'].lower() and delta > 0:
+        result = "Grazie per la tua stima"
+    else:
+        result = "Prendo nota."
+    r, k = readval(nick)
+    k_ = k + delta
+    karma[nick.lower()] = (r, k_)
+    result = "%s %s: %d" % (result, r, k_)
+    save()
+    return result
 
 def help():
     return ".karma per vedere la classifica, .karma nickname per vedere il karma della persona, nickname++ o nickname-- per aumentarlo o diminuirlo"
