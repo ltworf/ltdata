@@ -19,6 +19,7 @@
 
 import sys
 import os
+import json
 config = {}
 karma = {}
 
@@ -28,28 +29,22 @@ def init():
 
 
 def load():
+    global karma
     f = file("%s/karma" % config['files'])
-    while True:
-        l = f.readline().strip()
-        if len(l) == 0:
-            return
-        parts = l.split('#', 1)
-        karma[parts[0]] = int(parts[1])
+    karma = json.load(f)
     f.close()
 
 
 def readval(nickname):
     try:
-        return karma[nickname]
+        return karma[nickname.lower()]
     except:
-        return 0
+        return (nickname, 0)
 
 
 def save():
     f = file("%s/karma" % config['files'], "w")
-    for i in karma:
-        f.write("%s#%d" % (i, karma[i]))
-        f.write("\n")
+    json.dump(f)
     f.close()
     pass
 
@@ -88,13 +83,10 @@ def vote(nick, delta=1):
         result = "Grazie per la tua stima"
     else:
         result = "Prendo nota."
-    entry = filter(lambda n: n.lower() == nick.lower, karma.keys())
-    if entry:
-        entry = entry[0]
-    else:
-        entry = nick
-    karma[entry] = readval(entry) + delta
-    result = "%s %s: %d" % (result, entry, karma[entry])
+    r, k = readval(nick)
+    k_ = k + delta
+    karma[nick.lower()] = (r, k_)
+    result = "%s %s: %d" % (result, r, k_)
     save()
     return result
 
