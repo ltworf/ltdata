@@ -71,7 +71,7 @@ def sendmsg(sender, recip, text):
             return "Ma di che parli?"
     elif (text.endswith('++') and len(text.split(' ')) == 1):
         nick = text[:-2]
-        if karma == config['nickname']:
+        if nick == config['nickname']:
             karma[nick] = readval(nick) + 1
             result = "Grazie per la tua stima"
         elif nick == sender:
