@@ -77,15 +77,15 @@ def sendmsg(sender, recip, text):
 
 def vote(nick, delta=1):
     if nick == config['nickname'] and delta > 0:
-        karma[nick] = readval(nick) + delta
         result = "Grazie per la tua stima"
     elif nick == config['nickname'] and delta <= 0:
-        result = "Nah, non credo di volerlo fare"
+        return "Nah, non credo di volerlo fare"
     elif nick == sender and delta > 0:
-        result = "Un po' autoreferenziale, non credi?"
+        return "Un po' autoreferenziale, non credi?"
     else:
-        karma[nick] = readval(nick) + delta
-        result = "Prendo nota. %s: %d" % (nick, karma[nick])
+        result = "Prendo nota."
+    karma[nick] = readval(nick) + delta
+    result = "%s %s: %d" % (result, nick, karma[nick])
     save()
     return result
 
