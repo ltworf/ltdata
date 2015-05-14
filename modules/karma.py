@@ -30,9 +30,12 @@ def init():
 
 def load():
     global karma
-    f = file("%s/karma" % config['files'])
-    karma = json.load(f)
-    f.close()
+    try:
+        f = file("%s/karma" % config['files'])
+        karma = json.load(f)
+        f.close()
+    except:
+        karma = {}
 
 
 def readval(nickname):
