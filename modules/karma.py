@@ -71,7 +71,7 @@ def sendmsg(sender, recip, text):
         if nick.lower() == sender.lower():
             return "Un po' autoreferenziale, non credi?"
         else:
-            return vote(nick)
+            return vote(nick, 1)
     elif (text.endswith('--') and len(text.split(' ')) == 1):
         nick = text[:-2]
         if nick.lower() == config['nickname'].lower() and delta <= 0:
@@ -80,7 +80,7 @@ def sendmsg(sender, recip, text):
             return vote(nick, -1)
     return None
 
-def vote(nick, delta=1):
+def vote(nick, delta):
     if nick.lower() == config['nickname'].lower() and delta > 0:
         result = "Grazie per la tua stima"
     else:
