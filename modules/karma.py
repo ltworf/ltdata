@@ -63,10 +63,10 @@ def sendmsg(sender, recip, text):
                  ", ".join(["%s(%d)" % (n, k) for (k, n) in rank_neg])))
     elif text.startswith(config['control'] + "karma "):
         nicks = text.strip().split(" ")[1:]
-        try:
-            items = [(k, "%s(%d)" % (n, k)) for n, k in karma.items() if n in nicks]
+        items = [(k, "%s(%d)" % (n, k)) for n, k in karma.items() if n in nicks]
+        if items:
             return ", ".join(map(lambda x:x[1], sorted(items, reverse=True)))
-        except:
+        else:
             return "Ma di che parli?"
     elif (text.endswith('++') and len(text.split(' ')) == 1):
         nick = text[:-2]
