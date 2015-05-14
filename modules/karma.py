@@ -70,18 +70,22 @@ def sendmsg(sender, recip, text):
         except:
             return "Ma di che parli?"
     elif (text.endswith('++') and len(text.split(' ')) == 1):
-        return vote(text[:-2])
+        nick = text[:-2]
+        if nick.lower() == sender.lower():
+            return "Un po' autoreferenziale, non credi?"
+        else:
+            return vote(nick)
     elif (text.endswith('--') and len(text.split(' ')) == 1):
-        return vote(text[:-2], -1)
+        nick = text[:-2]
+        if nick.lower() == config['nickname'].lower() and delta <= 0:
+            return "Nah, non credo di volerlo fare"
+        else:
+            return vote(nick, -1)
     return None
 
 def vote(nick, delta=1):
     if nick.lower() == config['nickname'].lower() and delta > 0:
         result = "Grazie per la tua stima"
-    elif nick.lower() == config['nickname'].lower() and delta <= 0:
-        return "Nah, non credo di volerlo fare"
-    elif nick.lower() == sender.lower() and delta > 0:
-        return "Un po' autoreferenziale, non credi?"
     else:
         result = "Prendo nota."
     entry = filter(lambda n: n.lower() == nick.lower, karma.keys())
