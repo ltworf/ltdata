@@ -76,16 +76,21 @@ def sendmsg(sender, recip, text):
     return None
 
 def vote(nick, delta=1):
-    if nick == config['nickname'] and delta > 0:
+    if nick.lower() == config['nickname'].lower() and delta > 0:
         result = "Grazie per la tua stima"
-    elif nick == config['nickname'] and delta <= 0:
+    elif nick.lower() == config['nickname'].lower() and delta <= 0:
         return "Nah, non credo di volerlo fare"
-    elif nick == sender and delta > 0:
+    elif nick.lower() == sender.lower() and delta > 0:
         return "Un po' autoreferenziale, non credi?"
     else:
         result = "Prendo nota."
-    karma[nick] = readval(nick) + delta
-    result = "%s %s: %d" % (result, nick, karma[nick])
+    entry = filter(lambda n: n.lower() == nick.lower, karma.keys())
+    if entry:
+        entry = entry[0]
+    else:
+        entry = nick
+    karma[entry] = readval(entry) + delta
+    result = "%s %s: %d" % (result, entry, karma[entry])
     save()
     return result
 
