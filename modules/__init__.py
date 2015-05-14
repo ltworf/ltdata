@@ -18,4 +18,5 @@
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
 __all__ = ["lart", "commands", "fortune", "karma", "insult",
-           "praise", "thanks", "wtf", "react", "seen", "lunch"]
+           "praise", "thanks", "wtf", "react", "seen", "lunch",
+           "version"]
