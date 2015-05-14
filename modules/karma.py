@@ -63,9 +63,10 @@ def sendmsg(sender, recip, text):
                  ", ".join(["%s(%d)" % (n, k) for (k, n) in rank_neg])))
     elif text.startswith(config['control'] + "karma "):
         nicks = text.strip().split(" ")[1:]
-        items = [(k, "%s(%d)" % (n, k)) for n, k in karma.items() if n in nicks]
+        items = [(k, "%s(%d)" % (n, k))
+                 for n, k in karma.items() if n in nicks]
         if items:
-            return ", ".join(map(lambda x:x[1], sorted(items, reverse=True)))
+            return ", ".join(map(lambda x: x[1], sorted(items, reverse=True)))
         else:
             return "Ma di che parli?"
     elif (text.endswith('++') and len(text.split(' ')) == 1):
@@ -82,6 +83,7 @@ def sendmsg(sender, recip, text):
             return vote(nick, -1)
     return None
 
+
 def vote(nick, delta):
     if nick.lower() == config['nickname'].lower() and delta > 0:
         result = "Grazie per la tua stima"
@@ -93,6 +95,7 @@ def vote(nick, delta):
     result = "%s %s: %d" % (result, r, k_)
     save()
     return result
+
 
 def help():
     return ".karma per vedere la classifica, .karma nickname per vedere il karma della persona, nickname++ o nickname-- per aumentarlo o diminuirlo"
