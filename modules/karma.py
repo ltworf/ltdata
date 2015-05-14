@@ -46,10 +46,8 @@ def readval(nickname):
 
 
 def save():
-    f = file("%s/karma" % config['files'], "w")
-    json.dump(f)
-    f.close()
-    pass
+    with file("%s/karma" % config['files'], "w") as f:
+        json.dump(karma, f)
 
 
 def sendmsg(sender, recip, text):
