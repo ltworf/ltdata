@@ -67,7 +67,7 @@ def sendmsg(sender, recip, text):
         nicks = text.strip().split(" ")[1:]
         try:
             items = [(k, "%s(%d)" % (n, k)) for n, k in karma.items() if n in nicks]
-            return ", ".join(map(itemgetter(1), sorted(items, reverse=True)))
+            return ", ".join(map(lambda x:x[1], sorted(items, reverse=True)))
         except:
             return "Ma di che parli?"
     elif (text.endswith('++') and len(text.split(' ')) == 1):
