@@ -56,15 +56,14 @@ def sendmsg(sender, recip, text):
         rank_pos = sorted([(k, n)
                           for n, k in karma.values()], reverse=True)[:3]
         rank_neg = sorted([(k, n) for n, k in karma.values()])[:3]
-        print rank_pos
-        print rank_neg
         return ("Gli idoli sono %s e i disgraziati sono %s" %
                 (", ".join(["%s(%d)" % (n, k) for (k, n) in rank_pos]),
                  ", ".join(["%s(%d)" % (n, k) for (k, n) in rank_neg])))
     elif text.startswith(config['control'] + "karma "):
         nicks = text.strip().split(" ")[1:]
-        items = [(k, "%s(%d)" % (n, k))
-                 for n, k in karma.items() if n in nicks]
+        nicks = set(map(lambda x: x.lower(), nicks))
+        items = [(k, "%s(%d)" % (k[0], k[1]))
+                 for n, k in karma.iteritems() if n in nicks]
         if items:
             return ", ".join(map(lambda x: x[1], sorted(items, reverse=True)))
         else:
