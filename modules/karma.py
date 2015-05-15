@@ -20,6 +20,7 @@
 import sys
 import os
 import json
+from itertools import *
 config = {}
 karma = {}
 
@@ -61,11 +62,11 @@ def sendmsg(sender, recip, text):
                  ", ".join(["%s(%d)" % (n, k) for (k, n) in rank_neg])))
     elif text.startswith(config['control'] + "karma "):
         nicks = text.strip().split(" ")[1:]
-        nicks = set(map(lambda x: x.lower(), nicks))
+        nicks = set(imap(lambda x: x.lower(), nicks))
         items = [(k, "%s(%d)" % (k[0], k[1]))
                  for n, k in karma.iteritems() if n in nicks]
         if items:
-            return ", ".join(map(lambda x: x[1], sorted(items, reverse=True)))
+            return ", ".join(imap(lambda x: x[1], sorted(items, reverse=True)))
         else:
             return "Ma di che parli?"
     elif (text.endswith('++') and len(text.split(' ')) == 1):
