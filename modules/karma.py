@@ -98,5 +98,7 @@ def vote(nick, delta):
 
 
 def help():
-    return ".karma per vedere la classifica, .karma nickname per vedere il karma della persona, nickname++ o nickname-- per aumentarlo o diminuirlo"
+    return (".karma per vedere la classifica, "
+        ".karma nickname per vedere il karma della persona, "
+        "nickname++ o nickname-- per aumentarlo o diminuirlo")
     pass
