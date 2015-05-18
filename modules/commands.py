@@ -69,8 +69,6 @@ def sendmsg(sender, recip, text):
         if is_admin != None:
             return is_admin
         sys.exit(0)
-    elif text.startswith(config['control'] + "version"):
-        return "E tu %s? Sei ancora una alpha vero?" % sender
     elif text.startswith(config['control'] + "nickname"):  # change nickname
         if is_admin != None:
             return is_admin
