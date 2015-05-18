@@ -23,7 +23,7 @@ def init():
 
 def sendmsg(source, dest, text):
     if text.startswith(config['control'] + "version"):
-        if len(text.split(' ')) == 1:
+        if ' ' not in text:
             return __version__
         else:
             return "version: too many arguments"
