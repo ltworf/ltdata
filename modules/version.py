@@ -25,7 +25,7 @@ def sendmsg(source, dest, text):
     if text.startswith(config['control'] + "version"):
         if len(text.split(' ')) != 1:
             return __version__
-        else
+        else:
             return "version: too many arguments"
 
 def help():
