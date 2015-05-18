@@ -26,7 +26,7 @@ def sendmsg(source, dest, text):
         if ' ' not in text:
             return __version__
         else:
-            return "version: too many arguments"
+            return "version: troppi argomenti"
 
 def help():
-    return config['control'] + "version: print the LtData version used by this bot"
+    return config['control'] + "version: mostra il commit usato da questo bot"
