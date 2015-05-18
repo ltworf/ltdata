@@ -23,7 +23,10 @@ def init():
 
 def sendmsg(source, dest, text):
     if text.startswith(config['control'] + "version"):
-        return __version__
+        if len(text.split(' ')) != 1:
+            return __version__
+        else
+            return "version: too many arguments"
 
 def help():
     return config['control'] + "version: print the LtData version used by this bot"
