@@ -19,12 +19,15 @@
 
 import json
 from time import strftime
-from os.path import normpath
+from os.path import normpath, isdir
+
+
+maildir = "%s/%s" % (config['files'], 'mail')
 
 
 def openmbox(name):
-    mbox = normpath('%s/%s' % (config['files'], name))
-    if not mbox.startswith(config['files']):
+    mbox = normpath('%s/%s' % (maildir, name))
+    if not mbox.startswith(maildir):
         return None
     try:
         return open(mbox, 'r+')
@@ -39,7 +42,8 @@ def writembox(index, mboxp):
 
 
 def init():
-    pass
+    if not isdir(maildir):
+        mkdir(maildir)
 
 
 def sendmsg(source, dest, text):
