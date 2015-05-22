@@ -85,6 +85,12 @@ def sendmsg(source, dest, text):
                 return "mail: mail sent."
 
 
+def onjoin(nick, _):
+    mboxp = openmbox(nick)
+    if mboxp and json.load(mboxp):
+        privmsg(nick, "You got mail!")
+
+
 def help():
     return '\n'.join([config['control'] + "mail: empty mailbox and read mail",
                       config['control'] + "mail <mbox> <msg>: " +
