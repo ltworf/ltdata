@@ -34,6 +34,8 @@ config = {}
 def privmsg(receiver, text):
     '''RFC 1459 PRIVMSG private messages
 
+    Send the message <text> to the channel or nickname <receiver>.
+
     Bot must be connected.'''
     sendmsg(config['socket'], receiver, text)
 
