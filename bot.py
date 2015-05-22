@@ -65,6 +65,12 @@ def reply(sender, recip, text, sock):
 
 
 def onjoin(nick, channel):
+    '''Called when a nickname joins one of the channels
+    that the bot is participating in.
+    
+    The main loop handles RFC 1459 JOIN messages by calling
+    this method which forwards the event to each module that
+    defines an `onjoin` method.'''
     for i in modules_list:
         try:
             i.onjoin(nick, channel)
