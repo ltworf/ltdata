@@ -62,6 +62,14 @@ def reply(sender, recip, text, sock):
     return None
 
 
+def onjoin(nick, channel):
+    for i in modules_list:
+        try:
+            i.onjoin(nick, channel)
+        except AttributeError:
+            pass
+
+
 def join(channels):
     '''Joins a list of channels'''
     for i in channels:
@@ -161,6 +169,10 @@ def main():
                 destination = ""
             print '(', destination, ')', nick + ':', message
             reply(nick, destination, message, sock)
+        elif data.find('JOIN') != -1:
+            nick, _, channel = data.split(' ', 3)
+            nick = nick.split('!')[0].replace(':', '')
+            onjoin(nick, channel)
 
 if __name__ == '__main__':
     loadconf()
