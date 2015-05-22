@@ -20,9 +20,10 @@
 import json
 from time import strftime
 from os.path import normpath, isdir
+from os import mkdir
 
-
-maildir = "%s/%s" % (config['files'], 'mail')
+config = {}
+maildir = None
 
 
 def openmbox(name):
@@ -42,6 +43,8 @@ def writembox(index, mboxp):
 
 
 def init():
+    global maildir
+    maildir = "%s/%s" % (config['files'], 'mail')
     if not isdir(maildir):
         mkdir(maildir)
 
