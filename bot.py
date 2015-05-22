@@ -31,6 +31,15 @@ modules_list = []  # List containing all the functions of modules
 config = {}
 
 
+def privmsg(receiver, text):
+    '''RFC 1459 PRIVMSG private messages
+
+    Send the message <text> to the channel or nickname <receiver>.
+
+    Bot must be connected.'''
+    sendmsg(config['socket'], receiver, text)
+
+
 def sendmsg(sock, dest, text):
     '''Sends a message to a room or a person'''
     if sock.send('PRIVMSG %s :%s\r\n' % (dest, text)) == 0:
@@ -53,6 +62,20 @@ def reply(sender, recip, text, sock):
             for i in r.split("\n"):
                 sendmsg(sock, recip, i)
     return None
+
+
+def onjoin(nick, channel):
+    '''Called when a nickname joins one of the channels
+    that the bot is participating in.
+    
+    The main loop handles RFC 1459 JOIN messages by calling
+    this method which forwards the event to each module that
+    defines an `onjoin` method.'''
+    for i in modules_list:
+        try:
+            i.onjoin(nick, channel)
+        except AttributeError:
+            pass
 
 
 def join(channels):
@@ -104,6 +127,7 @@ def loadmodules():
         mod.config = config
         mod.sanitize = sanitize
         mod.join = join
+        mod.privmsg = privmsg
         mod.init()
         modules_list.append(mod)  # Adding module to the list
 
@@ -153,6 +177,10 @@ def main():
                 destination = ""
             print '(', destination, ')', nick + ':', message
             reply(nick, destination, message, sock)
+        elif data.find('JOIN') != -1:
+            nick, _, channel = data.split(' ', 3)
+            nick = nick.split('!')[0].replace(':', '')
+            onjoin(nick, channel)
 
 if __name__ == '__main__':
     loadconf()
