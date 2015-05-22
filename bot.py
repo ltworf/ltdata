@@ -31,6 +31,13 @@ modules_list = []  # List containing all the functions of modules
 config = {}
 
 
+def privmsg(receiver, text):
+    '''RFC 1459 PRIVMSG private messages
+
+    Bot must be connected.'''
+    sendmsg(config['socket'], receiver, text)
+
+
 def sendmsg(sock, dest, text):
     '''Sends a message to a room or a person'''
     if sock.send('PRIVMSG %s :%s\r\n' % (dest, text)) == 0:
@@ -104,6 +111,7 @@ def loadmodules():
         mod.config = config
         mod.sanitize = sanitize
         mod.join = join
+        mod.privmsg = privmsg
         mod.init()
         modules_list.append(mod)  # Adding module to the list
 
