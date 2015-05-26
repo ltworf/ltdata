@@ -95,7 +95,7 @@ def onjoin(nick, _):
     checkmail(nick)
 
 
-def onnick(nick):
+def onnick(_, nick):
     checkmail(nick)
 
 
