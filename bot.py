@@ -197,7 +197,8 @@ def main():
             onjoin(nick, channel)
         elif data.find('NICK') != -1:
             oldnick, _, newnick = data.split(' ', 3)
-            oldnick = oldnick.split('!')[0].replace(':', '')
+            oldnick = oldnick.split('!')[0].replace(':', '').strip()
+            newnick = newnick.split('!')[0].replace(':', '').strip()
             onnick(oldnick, newnick)
 
 if __name__ == '__main__':
