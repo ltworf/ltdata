@@ -85,10 +85,18 @@ def sendmsg(source, dest, text):
                 return "mail: mail sent."
 
 
-def onjoin(nick, _):
+def checkmail(nick):
     mboxp = openmbox(nick)
     if mboxp and json.load(mboxp):
         privmsg(nick, "You got mail!")
+
+
+def onjoin(nick, _):
+    checkmail(nick)
+
+
+def onnick(_, nick):
+    checkmail(nick)
 
 
 def help():
