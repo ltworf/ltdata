@@ -78,7 +78,7 @@ def onjoin(nick, channel):
             pass
 
 
-def onnick(nick):
+def onnick(oldnick, newnick):
     '''Called when a user changes her nickname in one of the
     channels that the bot is participating in.
     
@@ -87,7 +87,7 @@ def onnick(nick):
     defines an `onjoin` method.'''
     for i in modules_list:
         try:
-            i.onnick(nick)
+            i.onnick(oldnick, newnick)
         except AttributeError:
             pass
 
@@ -196,8 +196,9 @@ def main():
             nick = nick.split('!')[0].replace(':', '')
             onjoin(nick, channel)
         elif data.find('NICK') != -1:
-            _, _, nick = data.split(' ', 3)
-            onnick(nick)
+            oldnick, _, newnick = data.split(' ', 3)
+            oldnick = oldnick.split('!')[0].replace(':', '')
+            onnick(oldnick, newnick)
 
 if __name__ == '__main__':
     loadconf()
