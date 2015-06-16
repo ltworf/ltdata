@@ -68,7 +68,7 @@ def sendmsg(source, dest, text):
         # send
         else:
             args = text.split(' ', 2)
-            if len(args) < 2:
+            if len(args) <= 2:
                 return "mail: message must not be empty"
             _, mbox, msg = args
             mboxp = openmbox(mbox)
